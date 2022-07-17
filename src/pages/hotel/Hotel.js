@@ -11,6 +11,8 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MediaList from "../../components/mailList/MailList";
 import Footer from "../../components/footer/Footer";
+import useFetch from "./../../hooks/useFetch";
+import { useLocation } from "react-router-dom";
 
 const photos = [
   {
@@ -35,6 +37,11 @@ const photos = [
 const Hotel = () => {
   const [sliderNumber, setSliderNumber] = useState(0);
   const [open, setOpen] = useState(false);
+  const location = useLocation();
+  const id = location.pathname.split("/")[2];
+  const url = `http://localhost:5000/api/hotels/find/${id}`;
+  const { data, loading } = useFetch(url);
+  console.log(data);
   const handleOpen = (i) => {
     setSliderNumber(i);
     setOpen(true);
@@ -53,88 +60,84 @@ const Hotel = () => {
     <>
       <Navbar />
       <Header type="list" />
-      <div className="hotelContainer">
-        {open && (
-          <div className="slider">
-            <FontAwesomeIcon
-              icon={faCircleXmark}
-              onClick={() => setOpen(false)}
-              className="close"
-            />
-            <FontAwesomeIcon
-              icon={faCircleArrowLeft}
-              onClick={() => handleMove("l")}
-              className="arrow"
-            />
-            <div className="sliderWrapper">
-              <img
-                src={photos[sliderNumber].src}
-                className="sliderImg"
-                alt=""
+      {loading ? (
+        "Loading Please Wait"
+      ) : (
+        <div className="hotelContainer">
+          {open && (
+            <div className="slider">
+              <FontAwesomeIcon
+                icon={faCircleXmark}
+                onClick={() => setOpen(false)}
+                className="close"
               />
-            </div>
-            <FontAwesomeIcon
-              icon={faCircleArrowRight}
-              onClick={() => handleMove("r")}
-              className="arrow"
-            />
-          </div>
-        )}
-        <div className="hotelWrapper">
-          <button className="bookNow">Reserve or Book Now</button>
-          <h1 className="hotelTitle">Hotel Dhanmondi</h1>
-          <div className="hotelAddress">
-            <FontAwesomeIcon icon={faLocationDot} />
-            <span>123 new sobahanbag Dhanmondi</span>
-          </div>
-          <span className="hotelDistance">
-            Excelent location 500 m from Framgate{" "}
-          </span>
-          <span className="hotelPriceHighLight">
-            Book a stay over 113$ at this property and get a free airport
-            service
-          </span>
-          <div className="hotelImages">
-            {photos.map((photo, i) => (
-              <div className="hotelImgWrapper">
+              <FontAwesomeIcon
+                icon={faCircleArrowLeft}
+                onClick={() => handleMove("l")}
+                className="arrow"
+              />
+              <div className="sliderWrapper">
                 <img
-                  src={photo.src}
-                  onClick={() => handleOpen(i)}
-                  className="hotelImg"
-                  alt="hotelRoom"
+                  src={data.photos[sliderNumber]}
+                  className="sliderImg"
+                  alt=""
                 />
               </div>
-            ))}
-          </div>
-          <div className="hotelDetails">
-            <div className="hotelDetailsText">
-              <h1 className="hotelTitle">Stay in the heart of Dhanmondi</h1>
-              <p className="hotelDesc">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum
-              </p>
+              <FontAwesomeIcon
+                icon={faCircleArrowRight}
+                onClick={() => handleMove("r")}
+                className="arrow"
+              />
             </div>
-            <div className="hotelDetailsPrice">
-              <h1>Perfect for a 9-night stay</h1>
-              <span>
-                Located in the heart of dhanmondi, this property has an excelent
-                location store of 9.8
-              </span>
-              <h2>
-                <b>$888</b>(9 nights)
-              </h2>
-              <button>Reserve or Book Now</button>
+          )}
+          <div className="hotelWrapper">
+            <button className="bookNow">Reserve or Book Now</button>
+            <h1 className="hotelTitle">{data.name}</h1>
+            <div className="hotelAddress">
+              <FontAwesomeIcon icon={faLocationDot} />
+              <span>{data.address}</span>
+            </div>
+            <span className="hotelDistance">
+              Excelent location - {data.distance}m from center
+            </span>
+            <span className="hotelPriceHighLight">
+              Book a stay over {data.cheapestPrice}$ at this property and get a
+              free airport service
+            </span>
+            <div className="hotelImages">
+              {data.photos?.map((photo, i) => (
+                <div className="hotelImgWrapper">
+                  <img
+                    src={photo}
+                    onClick={() => handleOpen(i)}
+                    className="hotelImg"
+                    alt="hotelRoom"
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="hotelDetails">
+              <div className="hotelDetailsText">
+                <h1 className="hotelTitle">{data.title}</h1>
+                <p className="hotelDesc">{data.desc}</p>
+              </div>
+              <div className="hotelDetailsPrice">
+                <h1>Perfect for a 9-night stay</h1>
+                <span>
+                  Located in the heart of dhanmondi, this property has an
+                  excelent location store of 9.8
+                </span>
+                <h2>
+                  <b>$888</b>(9 nights)
+                </h2>
+                <button>Reserve or Book Now</button>
+              </div>
             </div>
           </div>
+          <MediaList />
+          <Footer />
         </div>
-        <MediaList />
-        <Footer />
-      </div>
+      )}
     </>
   );
 };
