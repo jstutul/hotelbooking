@@ -1,64 +1,46 @@
 import React from "react";
 import "./featuredProperties.css";
-export default function featuredProperties() {
+import useFetch from '../../hooks/useFetch'
+export default function FeaturedProperties() {
+
+  const url="http://localhost:5000/api/hotels?featured=true&limit=3&min=2&max=400";
+  const {data,loading}=useFetch(url);
+  const images=[
+      "https://ik.imagekit.io/tvlk/apr-asset/dgXfoyh24ryQLRcGq00cIdKHRmotrWLNlvG-TxlcLxGkiDwaUSggleJNPRgIHCX6/hotel/asset/10003802-1600x1066-FIT_AND_TRIM-ed3444a6a10b221d5d0c50ebfd2498cb.jpeg?tr=q-40,c-at_max,w-1280,h-720&_src=imagekit",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTD1zurL4s0yAhmn_5XLacsOjx2Ux9OjU-Z8RDS7MUch_L1m1TBD8P7eAeI6KlBYptBgYM&usqp=CAU",
+      "https://ik.imagekit.io/tvlk/apr-asset/dgXfoyh24ryQLRcGq00cIdKHRmotrWLNlvG-TxlcLxGkiDwaUSggleJNPRgIHCX6/hotel/asset/10003802-1600x1066-FIT_AND_TRIM-ed3444a6a10b221d5d0c50ebfd2498cb.jpeg?tr=q-40,c-at_max,w-1280,h-720&_src=imagekit"
+   ]
   return (
     <div className="fp">
-      <div className="fpItem">
-        <img
-          className="fpImg"
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSYsq0keW82D9Nb6uSvic9jfekRq8c3d3Lv7LeW2K0k5tQ6oGMrF-nFNdGh_6Jt2HbEmo&usqp=CAU"
-          alt="icon"
-        />
-        <span className="fpName">Apathore Hotel Name</span>
-        <span className="fpPrice">Dhaka</span>
-        <span className="fpName">Staring from 120$</span>
-        <div className="fpRatting">
-          <button>8.9</button>
-          <span>Exelent</span>
-        </div>
-      </div>
-      <div className="fpItem">
-        <img
-          className="fpImg"
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSYsq0keW82D9Nb6uSvic9jfekRq8c3d3Lv7LeW2K0k5tQ6oGMrF-nFNdGh_6Jt2HbEmo&usqp=CAU"
-          alt="icon"
-        />
-        <span className="fpName">Apathore Hotel Name</span>
-        <span className="fpPrice">Dhaka</span>
-        <span className="fpName">Staring from 120$</span>
-        <div className="fpRatting">
-          <button>8.9</button>
-          <span>Exelent</span>
-        </div>
-      </div>
-      <div className="fpItem">
-        <img
-          className="fpImg"
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSYsq0keW82D9Nb6uSvic9jfekRq8c3d3Lv7LeW2K0k5tQ6oGMrF-nFNdGh_6Jt2HbEmo&usqp=CAU"
-          alt="icon"
-        />
-        <span className="fpName">Apathore Hotel Name</span>
-        <span className="fpPrice">Dhaka</span>
-        <span className="fpName">Staring from 120$</span>
-        <div className="fpRatting">
-          <button>8.9</button>
-          <span>Exelent</span>
-        </div>
-      </div>
-      <div className="fpItem">
-        <img
-          className="fpImg"
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSYsq0keW82D9Nb6uSvic9jfekRq8c3d3Lv7LeW2K0k5tQ6oGMrF-nFNdGh_6Jt2HbEmo&usqp=CAU"
-          alt="icon"
-        />
-        <span className="fpName">Apathore Hotel Name</span>
-        <span className="fpPrice">Dhaka</span>
-        <span className="fpName">Staring from 120$</span>
-        <div className="fpRatting">
-          <button>8.9</button>
-          <span>Exelent</span>
-        </div>
-      </div>
+      {
+        loading ? "Loading Please Wait"
+        :
+        <>
+        {
+            data.map((item)=>(
+              <div className="fpItem" key={item._id}>
+              <img
+                className="fpImg"
+                src={item.photos[0]?item.photos[0]:images[0] }
+                alt="icon"
+              />
+              <span className="fpName">{item.name}</span>
+              <span className="fpPrice" style={{textTransform: "capitalize"}}>{item.city}</span>
+              <span className="fpName">Staring from {item.cheapestPrice}$</span>
+              {item.ratting && <div className="fpRatting">
+                <button>{item.ratting}</button>
+                <span>Exelent</span>
+              </div>}
+            </div>
+            ))
+        }
+       
+        
+        </>
+        }
+      
+
+      
     </div>
   );
 }

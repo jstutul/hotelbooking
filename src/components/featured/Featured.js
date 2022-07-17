@@ -3,8 +3,7 @@ import useFetch from '../../hooks/useFetch'
 import "./Featured.css"
 export default function Featured() {
     const url="http://localhost:5000/api/hotels/countByCity?cities=dhaka,pabna,cumilla,barisal";
-    const {data,loading,error}=useFetch(url);
-    console.log(data);
+    const {data,loading}=useFetch(url);
     return (
         <div className="featured">
             { loading ? "Loading Please Wait":

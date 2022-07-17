@@ -13,6 +13,7 @@
 }
 .fpImg{
     width: 100%;
+    max-height: 220px;
 }
 .fpName{
 font-weight: bold;
