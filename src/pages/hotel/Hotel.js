@@ -13,6 +13,8 @@ import MediaList from "../../components/mailList/MailList";
 import Footer from "../../components/footer/Footer";
 import useFetch from "./../../hooks/useFetch";
 import { useLocation } from "react-router-dom";
+import { useContext } from "react";
+import { SearchContext } from "../../context/SearchContext";
 
 const photos = [
   {
@@ -41,7 +43,16 @@ const Hotel = () => {
   const id = location.pathname.split("/")[2];
   const url = `http://localhost:5000/api/hotels/find/${id}`;
   const { data, loading } = useFetch(url);
-  console.log(data);
+  const {dates,options}=useContext(SearchContext);
+  const MILLISECOND_PER_DAY=1000*60*60*24;
+  function dayDifference(date1,date2){
+    const timeDiff=Math.abs(date2.getTime()-date1.getTime());
+    const diffDays=Math.ceil(timeDiff/MILLISECOND_PER_DAY);
+    return diffDays;
+  }
+  const days=dayDifference(dates[0].endDate,dates[0].startDate);
+
+  
   const handleOpen = (i) => {
     setSliderNumber(i);
     setOpen(true);
@@ -122,13 +133,13 @@ const Hotel = () => {
                 <p className="hotelDesc">{data.desc}</p>
               </div>
               <div className="hotelDetailsPrice">
-                <h1>Perfect for a 9-night stay</h1>
+                <h1>Perfect for a {days}-night stay</h1>
                 <span>
                   Located in the heart of dhanmondi, this property has an
                   excelent location store of 9.8
                 </span>
                 <h2>
-                  <b>$888</b>(9 nights)
+                  <b>${days * data.cheapestPrice * options.room}</b>({days} nights)
                 </h2>
                 <button>Reserve or Book Now</button>
               </div>
