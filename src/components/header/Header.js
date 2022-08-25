@@ -16,6 +16,7 @@ import "react-date-range/dist/theme/default.css"; // theme css file
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import {SearchContext} from "../../context/SearchContext"
+import {AuthContext} from "../../context/AuthContext"
 export default function Header({ type }) {
   const [destination, setDestination] = useState("");
   const [openDate, setOpenDate] = useState(false);
@@ -25,6 +26,9 @@ export default function Header({ type }) {
     children: 0,
     room: 1,
   });
+  const navigate=useNavigate();
+  const {user}=useContext(AuthContext)
+
   const handleOption = (name, operation) => {
     setOptions((prev) => {
       return {
@@ -41,7 +45,6 @@ export default function Header({ type }) {
       key: "selection",
     },
   ]);
-  const navigate = useNavigate();
   const handleSearch = () => {
     dispatch({type:"NEW_SEARCH",payload:{destination,dates,options}})
     navigate("/hotels", { state: { destination, dates, options } });
@@ -82,7 +85,7 @@ export default function Header({ type }) {
               Lorem ipsum dolor sit, amet consectetur adipisicing elit.
               Repudiandae obcaecati laborum eveniet tenetur numquam nulla.
             </p>
-            <button className="headerButton">Signin/Register</button>
+            {!user && <button className="headerButton">Signin/Register</button>}
             <div className="headerSearch">
               <div className="headerSearchItem">
                 <FontAwesomeIcon icon={faBed} className="headerIcon" />

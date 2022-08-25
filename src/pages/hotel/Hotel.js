@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "./Hotel.css";
 import Navbar from "../../components/navbar/Navbar";
 import Header from "../../components/header/Header";
+import {AuthContext} from "../../context/AuthContext"
+import { useNavigate } from 'react-router-dom';
 import {
   faLocationDot,
   faCircleXmark,
@@ -15,6 +17,7 @@ import useFetch from "./../../hooks/useFetch";
 import { useLocation } from "react-router-dom";
 import { useContext } from "react";
 import { SearchContext } from "../../context/SearchContext";
+import Reserve from "../../components/reserve/Reserve";
 
 const photos = [
   {
@@ -39,6 +42,7 @@ const photos = [
 const Hotel = () => {
   const [sliderNumber, setSliderNumber] = useState(0);
   const [open, setOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const location = useLocation();
   const id = location.pathname.split("/")[2];
   const url = `http://localhost:5000/api/hotels/find/${id}`;
@@ -67,6 +71,15 @@ const Hotel = () => {
     }
     setSliderNumber(NewSliderNumber);
   };
+  const {user}=useContext(AuthContext)
+  const navigate=useNavigate();
+  const handleClick=()=>{
+    if(user){
+      setOpenModal(true);
+    }else{
+      navigate("/login")
+    }
+  }
   return (
     <>
       <Navbar />
@@ -102,7 +115,7 @@ const Hotel = () => {
             </div>
           )}
           <div className="hotelWrapper">
-            <button className="bookNow">Reserve or Book Now</button>
+            <button onClick={handleClick} className="bookNow">Reserve or Book Now</button>
             <h1 className="hotelTitle">{data.name}</h1>
             <div className="hotelAddress">
               <FontAwesomeIcon icon={faLocationDot} />
@@ -149,6 +162,7 @@ const Hotel = () => {
           <Footer />
         </div>
       )}
+      {openModal && <Reserve setOpen={setOpenModal} hotelId={id} /> }
     </>
   );
 };

@@ -1,14 +1,13 @@
 .login{  
-    width: 382px;  
-    overflow: hidden;  
-    margin: auto;  
-    margin: 20 0 0 450px;  
-    padding: 50px;  
-    background: #565a59;  
-    border-radius: 15px ;  
-      
+    width: 300px;
+    overflow: hidden;
+    margin: auto;
+    margin: 20 0 0 450px;
+    padding: 50px;
+    background: #000000;
+    border-radius: 15px; 
 }  
-h2{  
+#login-title{  
 text-align: center;  
 color: #ffffff;  
 }  
@@ -41,11 +40,8 @@ color: blue;
 
 
 }  
-span{  
-color: white;  
+#login-span{  
+color: rgb(255, 0, 0);  
 font-size: 17px;  
-}  
-a{  
-float: right;  
-background-color: grey;  
+text-align: center;
 }  
