@@ -15,8 +15,8 @@ import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
-import {SearchContext} from "../../context/SearchContext"
-import {AuthContext} from "../../context/AuthContext"
+import { SearchContext } from "../../context/SearchContext";
+import { AuthContext } from "../../context/AuthContext";
 export default function Header({ type }) {
   const [destination, setDestination] = useState("");
   const [openDate, setOpenDate] = useState(false);
@@ -26,8 +26,8 @@ export default function Header({ type }) {
     children: 0,
     room: 1,
   });
-  const navigate=useNavigate();
-  const {user}=useContext(AuthContext)
+  const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
 
   const handleOption = (name, operation) => {
     setOptions((prev) => {
@@ -37,16 +37,19 @@ export default function Header({ type }) {
       };
     });
   };
-  const {dispatch}=useContext(SearchContext);
+  const { dispatch } = useContext(SearchContext);
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
   const [dates, setDates] = useState([
     {
-      startDate: new Date(),
-      endDate: new Date(),
+      startDate: today,
+      endDate: tomorrow,
       key: "selection",
     },
   ]);
   const handleSearch = () => {
-    dispatch({type:"NEW_SEARCH",payload:{destination,dates,options}})
+    dispatch({ type: "NEW_SEARCH", payload: { destination, dates, options } });
     navigate("/hotels", { state: { destination, dates, options } });
   };
   return (
