@@ -6,9 +6,11 @@ import useFetch from "../../hooks/useFetch";
 import { useState } from "react";
 import { SearchContext } from "../../context/SearchContext";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const Reserve = ({ setOpen, hotelId }) => {
   const [selectRooms, setSelectRooms] = useState([]);
   const { dates } = useContext(SearchContext);
+  const navigate = useNavigate();
   const { data } = useFetch(`http://localhost:5000/api/hotels/room/${hotelId}`);
 
   const handleSelect = (e) => {
@@ -52,6 +54,8 @@ const Reserve = ({ setOpen, hotelId }) => {
           return res.data;
         })
       );
+      setOpen(false);
+      navigate("/");
     } catch (err) {}
   };
   return (
